@@ -12,6 +12,7 @@
                 <local:ValidationBehaviour />
             </Editor.Behaviors>
         </Editor>
+        <Picker x:Name="ShopPicker" Title="Enter Shop Name"/>
 
         <Grid>
             <Grid.ColumnDefinitions>
@@ -31,8 +32,7 @@
                     <TextCell Detail="{Binding Description}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
-        <Button Text="Add/Choose Item to buy" MaximumWidthRequest="300"
-Clicked="OnChooseButtonClicked"/>
+        </ListView>        <Button Text="Delete Item" MaximumWidthRequest="300" Clicked="OnDeleteItemButtonClicked"/>
+        <Button Text="Add/Choose Item to buy" MaximumWidthRequest="300" Clicked="OnChooseButtonClicked"/>
     </StackLayout>
 </ContentPage>

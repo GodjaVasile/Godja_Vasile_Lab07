@@ -1,16 +1,21 @@
-﻿
-
-using SQLite;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using SQLite;
 using Godja_Vasile_Lab7.Models;
-
-
+using Godja_Vasile_Lab7.Models;
 
 namespace Godja_Vasile_Lab7.Data
 {
     public class ShoppingListDatabase
     {
+        //Aceasta clasa va contine cod pentru crearea, citirea, srierea si stergerea datelor
+        //Utilizam API-r SQLite asincrone pentru a pune operatiile pe baza de date in thread-uri de background
+        //Constructorul a estei clase ia ca si argument calea catre fisierul de tip baza de date 
+        // => aceasta cale este furnizata de clasa App in pasul urmator
+
         readonly SQLiteAsyncConnection _database;
         public ShoppingListDatabase(string dbPath)
         {
@@ -18,6 +23,24 @@ namespace Godja_Vasile_Lab7.Data
             _database.CreateTableAsync<ShopList>().Wait();
             _database.CreateTableAsync<Product>().Wait();
             _database.CreateTableAsync<ListProduct>().Wait();
+            _database.CreateTableAsync<Shop>().Wait();
+
+        }
+
+        public Task<List<Shop>> GetShopsAsync()
+        {
+            return _database.Table<Shop>().ToListAsync();
+        }
+        public Task<int> SaveShopAsync(Shop shop)
+        {
+            if (shop.ID != 0)
+            {
+                return _database.UpdateAsync(shop);
+            }
+            else
+            {
+                return _database.InsertAsync(shop);
+            }
         }
         public Task<int> SaveProductAsync(Product product)
         {
@@ -29,6 +52,15 @@ namespace Godja_Vasile_Lab7.Data
             {
                 return _database.InsertAsync(product);
             }
+        }
+        public Task<int> DeleteProductAsync(Product product)
+        {
+            return _database.DeleteAsync(product);
+        }
+        public Task<List<Product>> GetProductsAsync()
+
+        {
+            return _database.Table<Product>().ToListAsync();
         }
 
         public Task<List<ShopList>> GetShopListsAsync()
@@ -46,25 +78,29 @@ namespace Godja_Vasile_Lab7.Data
             if (slist.ID != 0)
             {
                 return _database.UpdateAsync(slist);
+
             }
             else
             {
                 return _database.InsertAsync(slist);
             }
         }
-        public Task<int> DeleteProductAsync(Product product)
-        {
-            return _database.DeleteAsync(product);
-        }
-        public Task<List<Product>> GetProductsAsync()
-        {
-            return _database.Table<Product>().ToListAsync();
-        }
-
         public Task<int> DeleteShopListAsync(ShopList slist)
         {
             return _database.DeleteAsync(slist);
         }
+
+        public Task<int> DeleteListProductAsync(ListProduct listp)
+        {
+            return _database.DeleteAsync(listp);
+        }
+
+        public Task<List<ListProduct>> GetListProducts()
+        {
+            return _database.QueryAsync<ListProduct>("select * from ListProduct");
+        }
+
+
         public Task<int> SaveListProductAsync(ListProduct listp)
         {
             if (listp.ID != 0)
@@ -85,6 +121,6 @@ namespace Godja_Vasile_Lab7.Data
             shoplistid);
         }
 
-
     }
+
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
-
+using SQLiteNetExtensions.Attributes;
 
 namespace Godja_Vasile_Lab7.Models
 {
@@ -17,6 +17,8 @@ namespace Godja_Vasile_Lab7.Models
         public string Description { get; set; }
         public DateTime Date { get; set; }
 
+        [ForeignKey(typeof(Shop))]
+        public int ShopID { get; set; }
 
     }
 }
